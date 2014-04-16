@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @category   Calliweb
+ * @package    Calliweb_Rma
+ * @author	   Calliweb <office@calliweb.fr>
+ * @copyright  Copyright (c) 2014 Calliweb (http://www.calliweb.fr)
+ * @license    http://creativecommons.org/publicdomain/zero/1.0/ Creative Commons CC0
+ */
+ -->
+<config>
+	<modules>
+		<Calliweb_Rma>
+			<version>1.2</version>
+		</Calliweb_Rma>
+	</modules>
+	<global>
+		<blocks>
+			<rma>
+				<class>Calliweb_Rma_Block</class>
+			</rma>
+		</blocks>
+		<helpers>
+			<rma>
+				<class>Calliweb_Rma_Helper</class>
+			</rma>
+		</helpers>
+		<models>
+			<rma>
+				<class>Calliweb_Rma_Model</class>
+				<resourceModel>rma_resource</resourceModel>
+			</rma>
+			<rma_resource>
+				<class>Calliweb_Rma_Model_Resource</class>
+				<entities>
+					<rma>
+						<table>rma</table>
+					</rma>
+					<item>
+						<table>rma_item</table>
+					</item>
+					<comment>
+						<table>rma_comment</table>
+					</comment>
+					<attachment>
+						<table>rma_attachment</table>
+					</attachment>
+				</entities>
+			</rma_resource>
+		</models>
+        <resources>
+            <rma_setup>
+                <setup>
+                    <module>Calliweb_Rma</module>
+                </setup>
+            </rma_setup>
+        </resources>
+	</global>
+    <frontend>
+        <routers>
+            <rma>
+                <use>standard</use>
+                <args>
+                    <module>Calliweb_Rma</module>
+                    <frontName>rma</frontName>
+                </args>
+            </rma>
+        </routers>
+        <layout>
+            <updates>
+                <rma>
+                    <file>rma.xml</file>
+                </rma>
+            </updates>
+        </layout>
+        <translate>
+            <modules>
+                <Calliweb_Rma>
+                    <files>
+                        <default>Calliweb_Rma.csv</default>
+                    </files>
+                </Calliweb_Rma>
+            </modules>
+        </translate>
+	</frontend>
+    <adminhtml>
+        <translate>
+            <modules>
+                <Calliweb_Rma>
+                    <files>
+                        <default>Calliweb_Rma.csv</default>
+                    </files>
+                </Calliweb_Rma>
+            </modules>
+        </translate>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <rma translate="title" module="rma">
+                                            <title>Return Merchandise Agreement</title>
+                                        </rma>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+	</adminhtml>
+    <default>
+		<rma>
+			<settings>
+				<enabled>0</enabled>
+				<order_states>complete,closed</order_states>
+				<objects>Exchange of product(s)
+Refund product(s)</objects>
+				<default_state>New</default_state>
+			</settings>
+		</rma>
+	</default>
+</config>
+ 

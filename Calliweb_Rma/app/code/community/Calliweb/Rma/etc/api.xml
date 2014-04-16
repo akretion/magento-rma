@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @category   Calliweb
+ * @package    Calliweb_Rma
+ * @author	   Calliweb <office@calliweb.fr>
+ * @copyright  Copyright (c) 2014 Calliweb (http://www.calliweb.fr)
+ * @license    http://creativecommons.org/publicdomain/zero/1.0/ Creative Commons CC0
+ */
+ -->
+<config>
+	<api>
+		<resources>
+			<rma translate="title" module="rma">
+				<model>rma/api</model>
+				<title>RMA API</title>
+				<acl>sales/rma</acl>
+				<methods>
+					<list translate="title" module="rma">
+						<title>Retrieve list of RMAs from date</title>
+						<method>items</method>
+						<acl>sales/rma/list</acl>
+					</list>
+					<get translate="title" module="rma">
+						<title>Retreive an RMA</title>
+						<method>retrieve</method>
+						<acl>sales/rma/get</acl>
+					</get>
+				</methods>
+				<faults module="rma">
+					<error>
+						<code>100</code>
+						<message>Unexpected error.</message>
+					</error>
+				</faults>
+			</rma>
+			<rma_comment translate="title" module="rma">
+				<model>rma/api</model>
+				<title>RMA Comment API</title>
+				<acl>sales/rma/comment</acl>
+				<methods>
+					<list translate="title" module="rma">
+						<title>Retrieve list of RMA comments from date</title>
+						<method>commentItems</method>
+						<acl>sales/rma/comment/list</acl>
+					</list>
+					<create translate="title" module="rma">
+						<title>Create RMA comment</title>
+						<method>commentCreate</method>
+						<acl>sales/rma/comment/create</acl>
+					</create>
+				</methods>
+				<faults module="rma">
+					<error>
+						<code>100</code>
+						<message>Unexpected error.</message>
+					</error>
+				</faults>
+			</rma_comment>
+			<rma_attachment translate="title" module="rma">
+				<model>rma/api</model>
+				<title>RMA Attachment API</title>
+				<acl>sales/rma/attachment</acl>
+				<methods>
+					<list translate="title" module="rma">
+						<title>Retrieve list of RMA attachments from date</title>
+						<method>attachmentItems</method>
+						<acl>sales/rma/attachment/list</acl>
+					</list>
+					<create translate="title" module="rma">
+						<title>Create RMA attachment</title>
+						<method>attachmentCreate</method>
+						<acl>sales/rma/attachment/create</acl>
+					</create>
+				</methods>
+				<faults module="rma">
+					<error>
+						<code>100</code>
+						<message>Unexpected error.</message>
+					</error>
+				</faults>
+			</rma_attachment>
+		</resources>
+        <resources_alias>
+            <rma>rma</rma>
+			<rma_comment>rma_comment</rma_comment>
+			<rma_attachment>rma_attachment</rma_attachment>
+        </resources_alias>
+        <v2>
+            <resources_function_prefix>
+                <rma>rma</rma>
+				<rma_comment>rma_comment</rma_comment>
+            	<rma_attachment>rma_attachment</rma_attachment>
+			</resources_function_prefix>
+        </v2>
+		<acl>
+			<resources>
+				<sales>
+					<rma translate="title" module="rma">
+						<title>RMA</title>
+						<list translate="title" module="rma">
+							<title>Retrieve list of RMAs</title>
+						</list>
+						<get translate="title" module="rma">
+							<title>Retrieve an RMA</title>
+						</get>
+						<comment translate="title" module="rma">
+							<list translate="title" module="rma">
+								<title>Retrieve list of RMA comments</title>
+							</list>
+							<create translate="title" module="rma">
+								<title>Create RMA comment</title>
+							</create>
+						</comment>
+						<attachment translate="title" module="rma">
+							<list translate="title" module="rma">
+								<title>Retrieve list of RMA attachments</title>
+							</list>
+							<create translate="title" module="rma">
+								<title>Create RMA attachment</title>
+							</create>
+						</attachment>
+					</rma>
+				</sales>
+			</resources>
+		</acl>
+	</api>
+</config>

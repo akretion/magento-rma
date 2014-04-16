@@ -1,0 +1,150 @@
+<?php
+/**
+ * @category   Calliweb
+ * @package    Calliweb_Rma
+ * @author	   Calliweb <office@calliweb.fr>
+ * @copyright  Copyright (c) 2014 Calliweb (http://www.calliweb.fr)
+ * @license    http://creativecommons.org/publicdomain/zero/1.0/ Creative Commons CC0
+ */
+ 
+ $_customerHelper = $this->helper('customer');
+ $_rma = $this->getRma();
+ $_order = $this->getOrder();
+ $_items = $_rma->getItems();
+ $_attachments = $_rma->getAttachments();
+ $_comments = $_rma->getComments();
+
+?>
+<div class="page-title title-buttons">
+    <h1><?php echo $this->__('Return #%s - %s', $_rma->getId(), $_rma->getState()) ?></h1>
+	<a href="<?php echo $this->getUrl('sales/order/view', array('order_id'=>$_order->getId())); ?>" class="link-order"><?php echo $this->__('View Order') ?></a>
+</div>
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<dl class="order-info">
+    <dt><strong><?php echo $this->__('For order:') ?></strong></dt>
+    <dd><?php echo $this->__('#%s on %s - %s', $_order->getRealOrderId(), $this->formatDate($_order->getCreatedAtStoreDate(), 'long'), $_order->getStatusLabel()) ?></dd>
+</dl>
+<p class="order-date"><?php echo $this->__('Request date: %s', $this->formatDate($_rma->getCreatedAt(), 'long')) ?></p>
+
+<div class="order-info-box">
+	<div class="box">
+		<div class="box-title">
+			<h2><?php echo $_rma->getSubject(); ?></h2>
+		</div>
+		<div class="box-content"><?php echo nl2br($_rma->getDescription()); ?></div>
+	</div>
+</div>
+
+<div class="order-items order-details">
+	<h3 class="table-caption"><?php echo $this->__('Concerned products') ?></h3>
+	<table class="data-table" id="rma_items">
+		<col />
+		<col width="1" />
+		<col width="1" />
+		<col />
+		<thead>
+			<tr>
+				<th><?php echo $this->__('Product Name') ?></th>
+				<th><?php echo $this->__('SKU') ?></th>
+				<th><?php echo $this->__('Returned qty') ?></th>
+				<th><?php echo $this->__('Status') ?></th>
+			</tr>
+		</thead>
+		<?php foreach ($_items as $_item): ?>
+		<tbody>
+			<?php echo $this->getItemHtml($_item->getOrderItem()) ?>
+		</tbody>
+		<?php endforeach; ?>
+	</table>
+	<script type="text/javascript">decorateTable('rma_items', {'tbody' : ['odd', 'even'], 'tbody tr' : ['first', 'last']})</script>
+</div>
+
+<?php if($_attachments->getSize()): ?>
+<br />
+<div class="order-items order-details">
+	<h3 class="table-caption"><?php echo $this->__('Attachments') ?></h3>
+	<table class="data-table">
+		<col />
+		<col width="1" />
+		<col width="1" />
+		<col width="1" />
+		<thead>
+			<tr>
+				<th><?php echo $this->__('File') ?></th>
+				<th><?php echo $this->__('Date') ?></th>
+				<th><?php echo $this->__('Added by') ?></th>
+				<th></th>
+			</tr>
+		</thead>
+		<?php foreach($_attachments as $_attachment): ?>
+		<tbody>
+			<tr>
+				<td><a href="<?php echo $this->getUrl('rma/attachment/download', array('id'=>$_attachment->getId())) ?>" title="<?php echo $this->__('Download') ?>"><?php echo $_attachment->getName(false) ?></a></td>
+				<td class="nobr"><?php echo $this->formatDate($_attachment->getCreatedAt(), 'short', true) ?></td>
+				<td class="nobr"><?php echo $_attachment->getAddedBy() ?></td>
+				<td class="nobr"><a href="<?php echo $this->getUrl('rma/attachment/download', array('id'=>$_attachment->getId())) ?>"><?php echo $this->__('Download') ?></a></td>
+			</tr>
+		</tbody>
+		<?php endforeach ?>
+	</table>
+	<script type="text/javascript">decorateTable('rma_attachments', {'tbody' : ['odd', 'even'], 'tbody tr' : ['first', 'last']})</script>
+</div>
+<?php endif ?>
+
+<?php if($_comments->getSize()): ?>
+<br />
+<div class="order-items order-details">
+	<h3 class="table-caption"><?php echo $this->__('Comments') ?></h3>
+	<?php foreach($_comments as $_comment): ?>
+	<div class="order-info-box">
+		<div class="box">
+			<div class="box-title">
+				<h2><?php echo $this->__('%s on %s', $_comment->getAddedBy(), $this->formatDate($_comment->getCreatedAt(), 'short', true)); ?></h2>
+			</div>
+			<div class="box-content"><?php echo nl2br($_comment->getMessage()); ?></div>
+		</div>
+	</div>
+	<?php endforeach ?>
+</div>
+<?php endif; ?>
+
+<form action="<?php echo $this->getUrl('rma/comment/post', array('id' => $_rma->getId())) ?>" method="post" id="form-validate" enctype="multipart/form-data">
+	<?php echo $this->getBlockHtml('formkey')?>
+	<div class="fieldset">
+		<h2 class="legend"><?php echo $this->__('Add comment') ?></h2>
+		<ul class="form-list">
+			<li class="wide">
+				<label for="rma-message"><?php echo $this->__('Comment'); ?></label>
+				<div class="input-box">
+					<textarea id="rma-message" name="message"></textarea>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="fieldset">
+		<h2 class="legend"><?php echo $this->__('Add attachments') ?></h2>
+		<ul id="rma_attachments" class="form-list">
+			<li class="wide">
+				<label for="rma_attachment"><?php echo $this->__("Attachment") ?></label>
+				<div class="input-box">
+					<input type="file" id="rma_attachment" name="attachments[]" title="<?php echo $this->__("Attachment") ?>" />
+				</div>
+				<a href="#"><?php echo $this->__("Remove") ?></a>
+			</li>
+		</ul>
+		<div class="buttons-set" style="margin:0">
+			<button id="rma_add_attachment" type="button" title="<?php echo $this->__('Add another attachment') ?>" class="button"><span><span><?php echo $this->__('Add another attachment') ?></span></span></button>
+		</div>
+	</div>
+	
+	<div class="buttons-set">
+		<p class="back-link"><a href="<?php echo $this->getUrl('rma/rma/list') ?>"><small>&laquo; </small><?php echo $_customerHelper->__('Back') ?></a></p>
+		<button type="submit" title="<?php echo $_customerHelper->__('Save') ?>" class="button"><span><span><?php echo $_customerHelper->__('Save') ?></span></span></button>
+	</div>
+</form>
+<script type="text/javascript">
+//<![CDATA[
+	var dataForm = new VarienForm('form-validate');	
+//]]>
+</script>

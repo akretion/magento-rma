@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category   Calliweb
+ * @package    Calliweb_Rma
+ * @author	   Calliweb <office@calliweb.fr>
+ * @copyright  Copyright (c) 2014 Calliweb (http://www.calliweb.fr)
+ * @license    http://creativecommons.org/publicdomain/zero/1.0/ Creative Commons CC0
+ */
+-->
+<layout version="0.1.0">
+	
+	<!-- Customer account pages, rendered for all tabs in dashboard -->
+	<customer_account>
+		<reference name="customer_account_navigation">
+			<action method="addLink" translate="label" module="rma" ifconfig="rma/settings/enabled">
+				<name>rma</name>
+				<path>rma/rma/list</path>
+				<label>Return Merchandise Agreements</label>
+			</action>
+		</reference>
+	</customer_account>
+
+	<!-- Order Views -->
+	<rma_sales_order>
+		<reference name="sales.order.info.buttons">
+			<block type="rma/view" name="rma.order.info.button" template="rma/order/info/button.phtml" />
+		</reference>
+	</rma_sales_order>
+	
+	<sales_order_view>
+		<update handle="rma_sales_order" />
+		<reference name="order_items">
+			<action method="addItemRender"><type>default</type><block>sales/order_item_renderer_default</block><template>rma/sales/order/items/renderer/default.phtml</template></action>
+			<action method="addItemRender"><type>grouped</type><block>sales/order_item_renderer_grouped</block><template>rma/sales/order/items/renderer/default.phtml</template></action>
+			<action method="addItemRender"><type>bundle</type><block>bundle/sales_order_items_renderer</block><template>rma/sales/order/items/renderer/bundle.phtml</template></action>
+		</reference>
+	</sales_order_view>
+	
+    <sales_order_invoice>
+		<update handle="rma_sales_order" />
+	</sales_order_invoice>
+    
+	<sales_order_shipment>
+		<update handle="rma_sales_order" />
+	</sales_order_shipment>
+	
+	<sales_order_creditmemo>
+		<update handle="rma_sales_order" />
+	</sales_order_creditmemo>
+
+	<sales_guest_view>
+		<update handle="rma_sales_order" />
+		<reference name="order_items">
+			<action method="addItemRender"><type>default</type><block>sales/order_item_renderer_default</block><template>rma/sales/order/items/renderer/default.phtml</template></action>
+			<action method="addItemRender"><type>grouped</type><block>sales/order_item_renderer_grouped</block><template>rma/sales/order/items/renderer/default.phtml</template></action>
+			<action method="addItemRender"><type>bundle</type><block>bundle/sales_order_items_renderer</block><template>rma/sales/order/items/renderer/bundle.phtml</template></action>
+		</reference>
+	</sales_guest_view>
+	
+	<sales_guest_invoice>
+		<update handle="rma_sales_order" />
+	</sales_guest_invoice>
+	
+	<sales_guest_shipment>
+		<update handle="rma_sales_order" />
+	</sales_guest_shipment>
+	
+	<sales_guest_creditmemo>
+		<update handle="rma_sales_order" />
+	</sales_guest_creditmemo>
+
+	<!-- Customer's RMAs list -->
+	<rma_rma_list>
+		<update handle="customer_account" />
+		<reference name="head">
+			<action method="setTitle" translate="title" module="rma">
+				<title>Return Merchandise Agreements</title>
+			</action>
+		</reference>
+		<reference name="my.account.wrapper">
+			<block type="rma/list" name="rma.list" template="rma/list.phtml" />
+		</reference>
+	</rma_rma_list>
+	
+	<!-- New request for RMA -->
+	<rma_rma_new>
+		<update handle="customer_account" />
+		<reference name="head">
+			<action method="setTitle" translate="title" module="rma">
+				<title>New request for return</title>
+			</action>
+			<action method="addItem"><type>skin_js</type><name>js/rma.js</name></action>
+		</reference>
+		<reference name="my.account.wrapper">
+			<block type="rma/view" name="rma.new" template="rma/new.phtml">
+				<action method="addItemRender"><type>default</type><block>sales/order_item_renderer_default</block><template>rma/order/items/renderer/form/default.phtml</template></action>
+				<action method="addItemRender"><type>bundle</type><block>bundle/sales_order_items_renderer</block><template>rma/order/items/renderer/form/bundle.phtml</template></action>
+			</block>
+		</reference>
+	</rma_rma_new>
+	
+	<!-- View RMA -->
+	<rma_rma_view>
+		<update handle="customer_account" />
+		<reference name="head">
+			<action method="addItem"><type>skin_js</type><name>js/rma.js</name></action>
+		</reference>
+		<reference name="my.account.wrapper">
+			<block type="rma/view" name="rma.view" template="rma/view.phtml">
+				<action method="addItemRender"><type>default</type><block>sales/order_item_renderer_default</block><template>rma/order/items/renderer/default.phtml</template></action>
+			</block>
+		</reference>
+	</rma_rma_view>
+	
+</layout>

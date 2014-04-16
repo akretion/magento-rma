@@ -1,0 +1,127 @@
+<?php
+/**
+ * @category   Calliweb
+ * @package    Calliweb_Rma
+ * @author	   Calliweb <office@calliweb.fr>
+ * @copyright  Copyright (c) 2014 Calliweb (http://www.calliweb.fr)
+ * @license    http://creativecommons.org/publicdomain/zero/1.0/ Creative Commons CC0
+ */
+ 
+ $_customerHelper = $this->helper('customer');
+ $_objects = $this->helper('rma')->getRequestObjects();
+ $_orders = $this->getOrders();
+
+?>
+<div class="page-title">
+    <h1><?php echo $this->__('New request for return') ?></h1>
+</div>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+<?php if($this->canReturnOrders()): ?>
+
+<form action="<?php echo $this->getUrl('rma/rma/post') ?>" method="post" id="form-validate" enctype="multipart/form-data">
+	<?php echo $this->getBlockHtml('formkey')?>
+	<div class="fieldset">
+		<h2 class="legend"><?php echo $this->__('Informations') ?></h2>
+		<ul class="form-list">
+			<li class="wide">
+				<label for="rma_subject" class="required"><em>*</em><?php echo $this->__("Object") ?></label>
+				<div class="input-box">
+					<select id="rma_subject" name="subject" title="<?php echo $this->__("Object") ?>" class="validate-select">
+						<option value=""><?php echo $this->helper('core')->__('-- Please Select --') ?></option>
+						<?php foreach($_objects as $_object): ?>
+						<option value="<?php echo $_object ?>"><?php echo $_object ?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+			</li>
+			<li class="wide">
+				<label for="rma_description" class="required"><em>*</em><?php echo $this->__('Motivations') ?></label>
+				<div class="input-box">
+					<textarea id="rma_description" name="description" title="<?php echo $this->__('Motivations') ?>" class="required-entry"></textarea>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="fieldset">
+		<h2 class="legend"><?php echo $this->__('Concerned products') ?></h2>
+		<ul class="form-list">
+			<li class="wide">
+				<label for="rma_order" class="required"><em>*</em><?php echo $this->__("Order") ?></label>
+				<div class="input-box">
+					<select id="rma_order" name="order_id" title="<?php echo $this->__("Order") ?>" class="validate-select">
+						<option value=""><?php echo $this->helper('core')->__('-- Please Select --') ?></option>
+						<?php foreach($_orders as $_order): ?>
+						<?php if (!$this->canReturnOrder($_order)) continue; ?>
+						<?php $_selected = $this->isCurrentOrder($_order) ? 'selected="selected"' : ''; ?>
+						<option value="<?php echo $_order->getId() ?>" <?php echo $_selected ?>><?php echo $this->__('#%s on %s - %s', $_order->getIncrementId(), $this->formatDate($_order->getCreatedAtStoreDate()), $_order->formatPrice($_order->getGrandTotal())) ?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+			</li>
+		</ul>
+		<div>
+			<?php foreach($_orders as $_order): ?>
+			<?php if (!$this->canReturnOrder($_order)) continue; ?>
+			<table class="data-table hidden" id="order_<?php echo $_order->getId() ?>">
+				<col />
+				<col width="1" />
+				<col width="1" />
+				<thead>
+					<tr>
+						<th><?php echo $this->__('Product Name') ?></th>
+						<th><?php echo $this->__('SKU') ?></th>
+						<th class="a-center"><?php echo $this->__('Returned qty') ?></th>
+					</tr>
+				</thead>
+				<?php $_items = $_order->getItemsCollection(); ?>
+				<?php foreach ($_items as $_item): ?>
+				<?php if (!$this->canDisplayOrderItem($_item)) continue; ?>
+				<tbody>
+					<?php echo $this->getItemHtml($_item) ?>
+				</tbody>
+				<?php endforeach; ?>
+			</table>
+			<script type="text/javascript">decorateTable('order_<?php echo $_order->getId() ?>', {'tbody' : ['odd', 'even'], 'tbody tr' : ['first', 'last']})</script>
+			<?php endforeach; ?>
+		</div>
+	</div>
+	<div class="fieldset">
+		<h2 class="legend"><?php echo $this->__('Attachments') ?></h2>
+		<ul id="rma_attachments" class="form-list">
+			<li class="wide">
+				<label for="rma_attachment"><?php echo $this->__("Attachment") ?></label>
+				<div class="input-box">
+					<input type="file" id="rma_attachment" name="attachments[]" title="<?php echo $this->__("Attachment") ?>" />
+				</div>
+				<a href="#"><?php echo $this->__("Remove") ?></a>
+			</li>
+		</ul>
+		<div class="buttons-set" style="margin:0">
+			<button id="rma_add_attachment" type="button" title="<?php echo $this->__('Add another attachment') ?>" class="button"><span><span><?php echo $this->__('Add another attachment') ?></span></span></button>
+		</div>
+	</div>
+	<div class="buttons-set">
+		<p><?php echo $this->__('Check out these informations before saving because you can not change this request later.'); ?></p>
+		<p class="required"><?php echo $_customerHelper->__('* Required Fields') ?></p>
+		<p class="back-link"><a href="<?php echo $this->getUrl('rma/rma/list') ?>"><small>&laquo; </small><?php echo $_customerHelper->__('Back') ?></a></p>
+		<button type="submit" title="<?php echo $_customerHelper->__('Save') ?>" class="button"><span><span><?php echo $_customerHelper->__('Save') ?></span></span></button>
+	</div>
+</form>
+
+<script type="text/javascript">
+//<![CDATA[
+	var dataForm = new VarienForm('form-validate');	
+//]]>
+</script>
+
+<?php else: ?>
+	
+	<p><?php echo $this->__('You cannot make requests for return.'); ?></p>
+	
+	<div class="buttons-set">
+		<p class="back-link"><a href="<?php echo $this->getUrl('rma/rma/list') ?>"><small>&laquo; </small><?php echo $_customerHelper->__('Back') ?></a></p>
+	</div>
+
+<?php endif ?>

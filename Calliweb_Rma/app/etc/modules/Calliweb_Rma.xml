@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!-- 
+/**
+ * @category   Calliweb
+ * @package    Calliweb_Rma
+ * @author	   Calliweb <office@calliweb.fr>
+ * @copyright  Copyright (c) 2014 Calliweb (http://www.calliweb.fr)
+ * @license    http://creativecommons.org/publicdomain/zero/1.0/ Creative Commons CC0
+ */
+ -->
+<config>
+    <modules>
+        <Calliweb_Rma>
+            <active>true</active>
+            <codePool>community</codePool>
+			<depends>
+				<Mage_Customer />
+				<Mage_Sales />
+			</depends>
+        </Calliweb_Rma>
+    </modules>
+</config> 
