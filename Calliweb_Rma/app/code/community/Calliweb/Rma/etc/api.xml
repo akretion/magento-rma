@@ -26,6 +26,11 @@
 						<method>retrieve</method>
 						<acl>sales/rma/get</acl>
 					</get>
+					<update translate="title" module="rma">
+						<title>Update state of an RMA</title>
+						<method>update</method>
+						<acl>sales/rma/update</acl>
+					</update>
 				</methods>
 				<faults module="rma">
 					<error>
@@ -104,6 +109,9 @@
 						<get translate="title" module="rma">
 							<title>Retrieve an RMA</title>
 						</get>
+						<update translate="title" module="rma">
+							<title>Update state of an RMA</title>
+						</update>
 						<comment translate="title" module="rma">
 							<list translate="title" module="rma">
 								<title>Retrieve list of RMA comments</title>

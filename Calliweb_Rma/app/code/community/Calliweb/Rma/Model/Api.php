@@ -40,7 +40,7 @@ class Calliweb_Rma_Model_Api extends Mage_Api_Model_Resource_Abstract
 		foreach($attachments as $attachment) {
 			$result['attachments'][] = $this->_formatAttachment($attachment);
 		}
-		
+
 		return $result;	
 	}
 	
@@ -109,6 +109,29 @@ class Calliweb_Rma_Model_Api extends Mage_Api_Model_Resource_Abstract
 		try {
 			$rma = Mage::getModel('rma/rma')->load($id);
 			if($rma->getId()) {
+				$result = $this->_formatRma($rma);
+			}
+		} catch (Exception $e) {
+			Mage::logException($e);
+			$this->_fault('error', $e->getMessage());
+		}
+		return $result;
+	}
+	
+	/**
+	 * Update RMA state by id
+	 *
+	 * @param string
+	 * @param string
+	 * @return array
+	 */
+	public function update($id, $state = null)
+	{
+		$result = array();
+		try {
+			$rma = Mage::getModel('rma/rma')->load($id);
+			if($rma->getId()) {
+				$rma->setState($state)->save();
 				$result = $this->_formatRma($rma);
 			}
 		} catch (Exception $e) {
